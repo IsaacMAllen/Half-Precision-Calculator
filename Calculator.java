@@ -33,7 +33,7 @@ public class Calculator
             {
                 return;
             }
-            valAssign();
+            valueAssigner();
         }
     }
 
@@ -99,7 +99,7 @@ public class Calculator
         }
     }
 
-    public void valAssign()
+    public void valueAssigner()
     {
         double exponent = 0;
         double wholeValue = 0;
@@ -229,6 +229,6 @@ public class Calculator
 
     public static void main(String[] args)
     {
-        Calculator cal = new Calculator();
+        new Calculator();
     }
 }
