@@ -8,17 +8,14 @@ import java.util.ArrayList;
  */
 public class Calculator
 {
-    private String stringNumber;
-    private int sign;
     private Scanner keyboard = new Scanner(System.in);
-    private int i = 0;
-    private double length = 0;
     private int[] numArr = new int[16];
     private boolean exit = false;
     private boolean valid = true;
-    private int nRuns = 0;
+    private int nValidRuns = 0;
+    
     public Calculator()
-    {      
+    {
         taskHandler();
     }
 
@@ -36,7 +33,7 @@ public class Calculator
             {
                 return;
             }
-            valueAssigner();
+            valAssign();
         }
     }
 
@@ -44,11 +41,10 @@ public class Calculator
     {
         if (valid)
         {
-            i++;
-            if (valid && nRuns == 0)
+            if (nValidRuns == 0)
             {
                 System.out.println("Enter a 16 bit floating point value or type exit.");
-                nRuns++;
+                nValidRuns++;
             } else
             {
                 System.out.println("Enter another 16 bit floating point value or type exit.");
@@ -58,9 +54,9 @@ public class Calculator
             System.out.println("Invalid number, please re-enter or type exit.");
             valid = true;
         }
-        stringNumber = keyboard.nextLine();
-        length = stringNumber.length();
-        if (stringNumber.toLowerCase().equals("exit"))
+        String stringNumber = keyboard.nextLine();
+        double length = stringNumber.length();
+        if (stringNumber.equalsIgnoreCase("exit"))
         {
             exit = true;
         }
@@ -104,7 +100,7 @@ public class Calculator
         }
     }
 
-    public void valueAssigner()
+    public void valAssign()
     {
         double exponent = 0;
         double wholeValue = 0;
@@ -112,6 +108,7 @@ public class Calculator
         double denominator = 0;
         double fraction = 0;
         double baseTenValue;
+        int sign;
         if (numArr[0] == 0)
         {
             sign = 1;
@@ -120,14 +117,13 @@ public class Calculator
             sign = -1;
         }
         int j = 5;
-        double expHandler = 0;
         for (int i = 1; i < 6 ; i++ )
         {
             exponent += (numArr[i] * Math.pow(2, j)) / 2;
             j--;
         }
         exponent -= 15;
-        ArrayList<String> out = new ArrayList<String>();
+        ArrayList<String> out = new ArrayList<>();
         out.add(0, "1");
         out.add(1,".");
         int l = 2;
@@ -170,18 +166,15 @@ public class Calculator
                 nBeforeDecimal++;  
                 backwards--;
             }
-            if (p >= 0)
+            if (p >= 0 && p > decimalPosition)
             {
-                if (p > decimalPosition)
+                if (backwards2 > decimalPosition && !out.get(p).equals("."))
                 {
-                    if (backwards2 > decimalPosition && out.get(p) != ".")
-                    {
-                        numerator += (Double.valueOf(out.get(p)) * Math.pow(2, q));
-                        q++;
-                        p--;
-                    } 
-                    backwards2--;
-                }
+                    numerator += (Double.valueOf(out.get(p)) * Math.pow(2, q));
+                    q++;
+                    p--;
+                } 
+                backwards2--;
             }
         }
         if (decimalPosition != out.size() - 1 && numerator != 0)
@@ -202,7 +195,7 @@ public class Calculator
             binVal += "-";
         }
         boolean zeroed = false;
-        if (out.get(0) == ".")
+        if (out.get(0).equals("."))
         {
             binVal += "0.";
             zeroed = true;
@@ -238,6 +231,6 @@ public class Calculator
 
     public static void main(String[] args)
     {
-        Calculator cal1 = new Calculator();
+        Calculator cal = new Calculator();
     }
 }
