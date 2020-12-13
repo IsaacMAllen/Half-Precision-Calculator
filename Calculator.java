@@ -24,15 +24,7 @@ public class Calculator
         while(!exit)
         {
             promptUser();
-            if (exit)
-            {
-                return;
-            }
             filterInput();
-            if (exit)
-            {
-                return;
-            }
             valueAssigner();
         }
     }
@@ -59,17 +51,14 @@ public class Calculator
         if (stringNumber.equalsIgnoreCase("exit"))
         {
             exit = true;
-        }
-        if (exit)
-        {
-            return;
-        }
-        if (length != 16)
+            taskHandler();
+        } else if (length != 16)
         {
             valid = false;
             promptUser();
         } else
         {
+            System.out.println("In");
             try{
                 for(int i = 0; i < 16; i++)
                 {
@@ -87,10 +76,6 @@ public class Calculator
     {
         for(int i = 0; i < 16; i++)
         {
-            if (exit)
-            {
-                break;
-            }
             if (numArr[i] != 0 && numArr[i] != 1)
             {
                 valid = false;
@@ -101,7 +86,9 @@ public class Calculator
 
     public void valueAssigner()
     {
-        double exponent = 0;
+        if (!exit)
+        {
+            double exponent = 0;
         double wholeValue = 0;
         double numerator = 0;
         double denominator = 0;
@@ -225,6 +212,7 @@ public class Calculator
         }
         System.out.println("Binary value = " + binVal);
         System.out.println("Decimal value = " + baseTenValue);
+        }
     }
 
     public static void main(String[] args)
