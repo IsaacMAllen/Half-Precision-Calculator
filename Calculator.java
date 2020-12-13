@@ -225,7 +225,6 @@ public class Calculator
             }
         }
         System.out.println("Binary value = " + binVal);
-
         System.out.println("Decimal value = " + baseTenValue);
     }
 
