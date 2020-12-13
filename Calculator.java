@@ -49,8 +49,7 @@ public class Calculator
             valid = true;
         }
         stringNumber = keyboard.nextLine();
-        length = stringNumber.length();
-        
+        length = stringNumber.length();      
     }
 
     public void filterInput()
@@ -107,19 +106,17 @@ public class Calculator
             }
 
             int j = 5;
-            
+
             for (int i = 1; i < 6 ; i++ )
             {
                 exponent += (numArr[i] * Math.pow(2, j)) / 2;
                 j--;
             }
             exponent -= 15;
-
             ArrayList<String> out = new ArrayList<>();
 
             out.add(0, "1");
             out.add(1,".");
-
             int l = 2;
 
             for (int i = 6; i < 16; i++)
@@ -135,19 +132,15 @@ public class Calculator
                     out.add(0, "0");
                 }
                 out.add(0, ".");
-            } else
-            {
-                if (exponent > out.size())
+            } else if (exponent > out.size())
                 {
                     for (int i = 12; i < exponent + 1; i++)
                     {
                         out.add(i, "0");
-                    } 
+                    }        
+                    out.remove(1);
+                    out.add((int) exponent, ".");           
                 }
-                out.remove(1);
-                out.add((int) exponent + 1, ".");           
-            }
-
             int decimalPosition = out.indexOf(".");
             int backwards = decimalPosition - 1;
             int backwards2 = out.size() - 1;
