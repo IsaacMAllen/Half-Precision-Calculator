@@ -85,7 +85,6 @@ public class Calculator
 
     public void filterInput()
     {
-
         for(int i = 0; i < 16; i++)
         {
             if (exit)
