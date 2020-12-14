@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * Half-precision binary floating point to decimal double converter. 
  * 
  * @author Isaac Allen 
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class Calculator
 {
