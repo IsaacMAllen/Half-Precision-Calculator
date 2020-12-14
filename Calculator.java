@@ -15,7 +15,8 @@ public class Calculator
     private int nValidRuns = 0;
     private String stringNumber;
     private double length;
-
+    private boolean parsed = false;
+    private int tasks = 0;
     public Calculator()
     {
         taskHandler();
@@ -23,12 +24,19 @@ public class Calculator
 
     public void taskHandler()
     {
-        while(!exit)
+        do
         {
-            promptUser();
-            filterInput();
-            valueAssigner();
-        }
+            if (!exit)
+            {
+                promptUser();
+                filterInput();
+            }    
+            if (parsed)
+            {
+                valueAssigner();
+            }
+        } while (!exit);
+             
     }
 
     public void promptUser()
@@ -46,7 +54,6 @@ public class Calculator
         } else 
         {
             System.out.println("Invalid number, please re-enter or type exit.");
-            valid = true;
         }
         stringNumber = keyboard.nextLine();
         length = stringNumber.length();      
@@ -61,26 +68,31 @@ public class Calculator
         } else if (length != 16)
         {
             valid = false;
-            promptUser();
+            taskHandler();
         } else
         {
-            try{
-                for(int i = 0; i < 16; i++)
-                {
-                    numArr[i] = Integer.parseInt(String.valueOf(stringNumber.charAt(i)));
-                }
-            } catch(NumberFormatException e)
+            do 
             {
-                valid = false;
-                promptUser();   
-            }                 
+                try{
+                    for(int i = 0; i < 16; i++)
+                    {
+                        numArr[i] = Integer.parseInt(String.valueOf(stringNumber.charAt(i)));
+                        parsed = true;
+                    }
+                } catch(NumberFormatException e)
+                {
+                    valid = false;
+                    taskHandler();
+                    break;
+                }
+            } while (!parsed);                           
         }
         for(int i = 0; i < 16; i++)
         {
             if (numArr[i] != 0 && numArr[i] != 1)
             {
                 valid = false;
-                promptUser(); 
+                taskHandler(); 
             }
         }
     }
@@ -142,6 +154,12 @@ public class Calculator
                     out.add((int) exponent, ".");           
                 }
             int decimalPosition = out.indexOf(".");
+            if (exponent != decimalPosition && exponent > 0)
+            {
+                out.remove(decimalPosition);
+                out.add((int) exponent + 1, ".");
+            }
+            decimalPosition = out.indexOf(".");
             int backwards = decimalPosition - 1;
             int backwards2 = out.size() - 1;
             double nBeforeDecimal = 0;
@@ -180,48 +198,23 @@ public class Calculator
             }
             baseTenValue = wholeValue + fraction;
 
-            String binVal = "";
-
-            if (sign == -1)
+            StringBuilder sb = new StringBuilder();
+            if (numArr[0] == 1)
             {
-                binVal += "-";
+                sb.append("-");
             }
-
-            boolean zeroed = false;
-
-            if (out.get(0).equals("."))
+            for (String s : out)
             {
-                binVal += "0.";
-                zeroed = true;
+                sb.append(s);
             }
-
-            boolean stop = false;
-            int lastOne = out.lastIndexOf("1");
-
-            for (int i = 0; i < out.size(); i++)
+            if (out.get(out.size() - 1).equals("."))
             {
-                if (!zeroed && !stop)
-                {
-                    binVal += out.get(i);
-                    if (i == lastOne)
-                    {
-                        stop = true;
-                    }
-                    if (lastOne < decimalPosition && stop)
-                    {
-                        binVal += ".0";
-                    }
-                } else if (zeroed && !stop && i + 1 < out.size())
-                {
-                    binVal += out.get(i + 1);
-                    if (i + 1 == lastOne && lastOne > decimalPosition)
-                    {
-                        stop = true;
-                    }
-                }
+                sb.append("0");
             }
+            String binVal = sb.toString();
             System.out.println("Binary value = " + binVal);
             System.out.println("Decimal value = " + baseTenValue);
+            valid = true;
         }
     }
 
