@@ -8,14 +8,15 @@ import java.util.ArrayList;
  */
 public class Calculator
 {
-    private Scanner keyboard = new Scanner(System.in);
-    private int[] numArr = new int[16];
     private boolean exit = false;
-    private boolean valid = true;
-    private int nValidRuns = 0;
-    private String stringNumber;
-    private double length;
     private boolean parsed = false;
+    private boolean valid = true;
+    private double length;
+    private int nValidRuns = 0;
+    private int[] numArr = new int[16];
+    private Scanner keyboard = new Scanner(System.in);
+    private String stringNumber;
+   
     public Calculator()
     {
         taskHandler();
@@ -100,13 +101,24 @@ public class Calculator
     {
         if (!exit)
         {
-            double exponent = 0;
-            int sign = 1;
-            double wholeValue = 0;
-            double numerator = 0;
-            double denominator = 0;
-            double fraction = 0;
+            ArrayList<String> binValList = new ArrayList<>();
             double baseTenValue;
+            double denominator = 0;  
+            double exponent = 0;
+            double fraction = 0;
+            double nBeforeDecimal = 0;
+            double numerator = 0;            
+            double wholeValue = 0; 
+            int decimalPosition = 0;
+            int fractionalValueIndexDecrementer = 0;
+            int indexCoef = 0;
+            int indexCoefDecrementer = 5;
+            int indexDecrementer = 0;
+            int mantissaIndex = 2;
+            int sign = 1; 
+            int wholeValueIndexDecrementer = 0;
+            String binValString = "";
+            StringBuilder sb = new StringBuilder();
 
             if (numArr[0] == 0)
             {
@@ -115,105 +127,106 @@ public class Calculator
             {
                 sign = -1;
             }
-
-            int j = 5;
-
             for (int i = 1; i < 6 ; i++ )
             {
-                exponent += (numArr[i] * Math.pow(2, j)) / 2;
-                j--;
+                exponent += (numArr[i] * Math.pow(2, indexCoefDecrementer)) / 2;
+                indexCoefDecrementer--;
             }
+
             exponent -= 15;
-            ArrayList<String> out = new ArrayList<>();
-
-            out.add(0, "1");
-            out.add(1,".");
-            int l = 2;
-
+            binValList.add(0, "1");
+            binValList.add(1,".");
+            
             for (int i = 6; i < 16; i++)
             {
-                out.add(l, String.valueOf(numArr[i]));
-                l++;
+                binValList.add(mantissaIndex, String.valueOf(numArr[i]));
+                mantissaIndex++;
             }
             if ((exponent + 1) < 0)
             {
-                out.remove(1);
+                binValList.remove(1);
                 for(int i = 1; i <= ((exponent + 1) * -1); i++)
                 {
-                    out.add(0, "0");
+                    binValList.add(0, "0");
                 }
-                out.add(0, ".");
-            } else if (exponent > out.size())
+                binValList.add(0, ".");
+            } else if (exponent > binValList.size())
                 {
                     for (int i = 12; i < exponent + 1; i++)
                     {
-                        out.add(i, "0");
+                        binValList.add(i, "0");
                     }        
-                    out.remove(1);
-                    out.add((int) exponent, ".");           
+                    binValList.remove(1);
+                    binValList.add((int) exponent, ".");           
                 }
-            int decimalPosition = out.indexOf(".");
+
+            decimalPosition = binValList.indexOf(".");
+
             if (exponent != decimalPosition && exponent > 0)
             {
-                out.remove(decimalPosition);
-                out.add((int) exponent + 1, ".");
+                binValList.remove(decimalPosition);
+                binValList.add((int) exponent + 1, ".");
             }
-            decimalPosition = out.indexOf(".");
-            int backwards = decimalPosition - 1;
-            int backwards2 = out.size() - 1;
-            double nBeforeDecimal = 0;
-            int p = out.lastIndexOf("1");
-            int q = 0;
 
-            for (int i = 0; i < out.size(); i++)
+            decimalPosition = binValList.indexOf(".");
+            wholeValueIndexDecrementer = decimalPosition - 1;
+            fractionalValueIndexDecrementer = binValList.size() - 1;           
+            indexDecrementer = binValList.lastIndexOf("1"); 
+
+            for (int i = 0; i < binValList.size(); i++)
             {               
                 if (i < decimalPosition)
                 {
-                    wholeValue += (Double.valueOf(out.get(backwards)) * Math.pow(2, i));
+                    wholeValue += (Double.valueOf(binValList.get(wholeValueIndexDecrementer)) * Math.pow(2, i));
                     nBeforeDecimal++;  
-                    backwards--;
+                    wholeValueIndexDecrementer--;
                 }
-                if (p >= 0 && p > decimalPosition)
+                if (indexDecrementer >= 0 && indexDecrementer > decimalPosition)
                 {
-                    if (backwards2 > decimalPosition && !out.get(p).equals("."))
+                    if (fractionalValueIndexDecrementer > decimalPosition && !binValList.get(indexDecrementer).equals("."))
                     {
-                        numerator += (Double.valueOf(out.get(p)) * Math.pow(2, q));
-                        q++;
-                        p--;
+                        numerator += (Double.valueOf(binValList.get(indexDecrementer)) * Math.pow(2, indexCoef));
+                        indexCoef++;
+                        indexDecrementer--;
                     } 
-                    backwards2--;
+                    fractionalValueIndexDecrementer--;
                 }
             }
-            if (decimalPosition != out.size() - 1 && numerator != 0)
+            if (decimalPosition != binValList.size() - 1 && numerator != 0)
             {            
-                denominator = Math.pow(2, (out.lastIndexOf("1") - nBeforeDecimal));
+                denominator = Math.pow(2, (binValList.lastIndexOf("1") - nBeforeDecimal));
             }
 
             wholeValue *= sign;
+
             if (denominator != 0)
             {
                 fraction = numerator / denominator;
                 fraction *= sign;
             }
+
             baseTenValue = wholeValue + fraction;
 
-            StringBuilder sb = new StringBuilder();
             if (numArr[0] == 1)
             {
                 sb.append("-");
             }
-            for (String s : out)
+            for (String s : binValList)
             {
                 sb.append(s);
             }
-            if (out.get(out.size() - 1).equals("."))
+            if (binValList.get(binValList.size() - 1).equals("."))
             {
                 sb.append("0");
             }
-            String binVal = sb.toString();
-            System.out.println("Binary value = " + binVal);
+
+            binValString = sb.toString();
+
+            System.out.println("Binary value = " + binValString);
             System.out.println("Decimal value = " + baseTenValue);
+
             valid = true;
+            
         }
     }
 
