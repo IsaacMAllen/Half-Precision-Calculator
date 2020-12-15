@@ -16,7 +16,6 @@ public class Calculator
     private String stringNumber;
     private double length;
     private boolean parsed = false;
-    private int tasks = 0;
     public Calculator()
     {
         taskHandler();
