@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * Half-precision binary floating point to base-10 double converter. 
  * 
  * @author Isaac Allen 
- * @version 1.0.2
+ * @version 1.0.3
  */
 public class Calculator
 {
@@ -120,13 +120,8 @@ public class Calculator
             String binValString = "";
             StringBuilder sb = new StringBuilder();
 
-            if (numArr[0] == 0)
-            {
-                sign = 1;
-            } else
-            {
-                sign = -1;
-            }
+            
+// Initializes an arraylist (binValList) of the translated binary value from the 16 bit input.
             for (int i = 1; i < 6 ; i++ )
             {
                 exponent += (numArr[i] * Math.pow(2, indexCoefDecrementer)) / 2;
@@ -158,6 +153,14 @@ public class Calculator
                     }        
                     binValList.remove(1);
                     binValList.add((int) exponent, ".");           
+                } else if (exponent < 0)
+                {
+                    binValList.remove(1);
+                    for (int i = 0; i < -exponent - 1; i++)
+                    {
+                        binValList.add(0, "0");
+                    }
+                    binValList.add(0, ".");
                 }
 
             decimalPosition = binValList.indexOf(".");
@@ -168,6 +171,7 @@ public class Calculator
                 binValList.add((int) exponent + 1, ".");
             }
 
+            // Converts the binValList to a double.
             decimalPosition = binValList.indexOf(".");
             wholeValueIndexDecrementer = decimalPosition - 1;
             fractionalValueIndexDecrementer = binValList.size() - 1;           
@@ -192,13 +196,20 @@ public class Calculator
                     fractionalValueIndexDecrementer--;
                 }
             }
-            if (decimalPosition != binValList.size() - 1 && numerator != 0)
-            {            
-                denominator = Math.pow(2, (binValList.lastIndexOf("1") - nBeforeDecimal));
+            if (numArr[0] == 0)
+            {
+                sign = 1;
+            } else
+            {
+                sign = -1;
             }
 
             wholeValue *= sign;
 
+            if (decimalPosition != binValList.size() - 1 && numerator != 0)
+            {            
+                denominator = Math.pow(2, (binValList.lastIndexOf("1") - nBeforeDecimal));
+            }
             if (denominator != 0)
             {
                 fraction = numerator / denominator;
@@ -207,6 +218,7 @@ public class Calculator
 
             baseTenValue = wholeValue + fraction;
 
+            // Initializes the sb StringBuilder object to the translated binary value.
             if (numArr[0] == 1)
             {
                 sb.append("-");
@@ -218,6 +230,27 @@ public class Calculator
             if (binValList.get(binValList.size() - 1).equals("."))
             {
                 sb.append("0");
+            }
+
+            // Removes Trailing Zeroes from binary output string if any exist.
+            if (sb.lastIndexOf("1") > sb.indexOf(".") && sb.charAt(sb.length() - 1) == '0')
+            {
+                for (int trailingZeroIndex = sb.length() - 1; trailingZeroIndex > sb.lastIndexOf("1"); trailingZeroIndex--)
+                {
+                    sb.deleteCharAt(trailingZeroIndex);
+                }
+            }
+
+            // Inserts a zero in the first valued offset of sb if the base 10 value is missing an integer component.
+            if (sb.charAt(0) == '.' || (sb.charAt(0) == '-' && sb.charAt(1) == '.'))
+            {
+                if (sb.charAt(0) == '-' && sb.charAt(1) == '.')
+                {
+                    sb.insert(1, "0");
+                } else
+                {
+                    sb.insert(0, "0");
+                }
             }
 
             binValString = sb.toString();
