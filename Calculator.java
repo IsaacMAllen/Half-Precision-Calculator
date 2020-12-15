@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 /**
- * Half-precision binary floating point to decimal double converter. 
+ * Half-precision binary floating point to base-10 double converter. 
  * 
  * @author Isaac Allen 
  * @version 1.0.2
@@ -226,7 +226,7 @@ public class Calculator
             System.out.println("Decimal value = " + baseTenValue);
 
             valid = true;
-            
+
         }
     }
 
