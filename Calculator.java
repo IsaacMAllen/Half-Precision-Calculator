@@ -30,8 +30,7 @@ public class Calculator
     public void taskHandler()
     {
         do
-        {
-            
+        {    
             if (!exit)
             {
                 //String input = test();
@@ -44,8 +43,7 @@ public class Calculator
                 baseTwoArrListToBaseTenDouble();
                 System.out.println(base10ValToString());
             }
-        } while (!exit);
-             
+        } while (!exit);       
     }
 
     public void promptUser(/*String input*/)
@@ -168,8 +166,7 @@ public class Calculator
             {
                 binValList.add(".");
                 binValList.remove(decimalPosition);
-            }
-            
+            } 
         }
     }
 
@@ -237,7 +234,6 @@ public class Calculator
     // Initializes the sb StringBuilder object to the translated binary value.
     public String base10ValToString()
     {
-
         StringBuilder sb = new StringBuilder();
         String binValString = "";
         
@@ -276,7 +272,8 @@ public class Calculator
         }
         
         valid = true;
-        binValString = "Binary value = " + sb.toString();       
+        binValString = "Binary value = " + sb.toString(); 
+              
         return binValString + "\nDecimal value = " + baseTenValue;    
     }
     
